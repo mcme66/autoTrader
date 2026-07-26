@@ -1,0 +1,50 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[*.{cs,csproj,props,targets,sln}]
+indent_size = 4
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.{yml,yaml}]
+indent_size = 2
+
+# --- C# style ---------------------------------------------------------------
+[*.cs]
+csharp_using_directive_placement = outside_namespace:warning
+csharp_style_namespace_declarations = file_scoped:warning
+csharp_style_var_for_built_in_types = false:suggestion
+csharp_style_expression_bodied_methods = when_on_single_line:suggestion
+csharp_prefer_braces = true:warning
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = false
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:warning
+dotnet_style_readonly_field = true:warning
+dotnet_naming_rule.private_fields_underscore.severity = warning
+dotnet_naming_rule.private_fields_underscore.symbols = private_fields
+dotnet_naming_rule.private_fields_underscore.style = underscore_camel
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+dotnet_naming_style.underscore_camel.required_prefix = _
+dotnet_naming_style.underscore_camel.capitalization = camel_case
+
+# Vertical whitespace is a style choice, not a correctness issue.
+dotnet_diagnostic.IDE0055.severity = suggestion
+# Logging in this codebase happens on request and job boundaries, not in hot loops, so the
+# source-generated LoggerMessage pattern (CA1848) and its boxing warning (CA1873) buy nothing
+# but ceremony. Revisit if profiling ever shows logging on a hot path.
+dotnet_diagnostic.CA1848.severity = none
+dotnet_diagnostic.CA1873.severity = none
+# Exception messages are not localized in this application.
+dotnet_diagnostic.CA1303.severity = none
+# CA1711 reserves 'Queue' for System.Collections types. Our ingestion queue really is a queue,
+# and naming it anything else would be less clear than the rule it satisfies.
+dotnet_code_quality.CA1711.allowed_suffixes = Queue

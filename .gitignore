@@ -1,0 +1,40 @@
+# --- Environment / secrets -------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pfx
+appsettings.Local.json
+
+# --- .NET ------------------------------------------------------------------
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+*.userprefs
+.vs/
+TestResults/
+coverage/
+*.coverage
+*.trx
+
+# --- Node ------------------------------------------------------------------
+node_modules/
+dist/
+dist-ssr/
+.vite/
+*.local
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Logs ------------------------------------------------------------------
+logs/
+*.log
+
+# --- Editors / OS ----------------------------------------------------------
+.idea/
+.DS_Store
+Thumbs.db
+*.swp

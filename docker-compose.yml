@@ -1,0 +1,75 @@
+# Production stack: nginx serving the built SPA and proxying /api, the ASP.NET API, and
+# PostgreSQL. `cp .env.example .env && docker compose up --build` is the whole setup.
+name: finance-analysis
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-finance}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      POSTGRES_DB: ${POSTGRES_DB:-finance_analysis}
+    volumes:
+      # postgres:18+ keeps data in a major-version subdirectory and refuses to start when the
+      # volume is mounted at the pre-18 /var/lib/postgresql/data path.
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test:
+        ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-finance} -d ${POSTGRES_DB:-finance_analysis}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks: [internal]
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: >-
+        Host=postgres;Port=5432;Database=${POSTGRES_DB:-finance_analysis};Username=${POSTGRES_USER:-finance};Password=${POSTGRES_PASSWORD}
+      Auth__Jwt__SigningKey: ${JWT_SIGNING_KEY:?JWT_SIGNING_KEY is required}
+      Auth__AllowRegistration: ${ALLOW_REGISTRATION:-true}
+      Security__InternalApiKey: ${INTERNAL_API_KEY:?INTERNAL_API_KEY is required}
+      MarketData__Provider: ${MARKET_DATA_PROVIDER:-mock}
+      MarketData__Polygon__ApiKey: ${POLYGON_API_KEY:-}
+      MarketData__UniverseFilePath: /app/config/universe.json
+      # The API applies migrations and reconciles the universe on first boot so a fresh stack
+      # is usable without a manual step.
+      Ingestion__ApplyMigrationsOnStartup: "true"
+      Ingestion__SyncUniverseOnStartup: "true"
+    ports:
+      # Bound to loopback, not 0.0.0.0: this exists only so the host's cron job can reach
+      # /api/internal/*, which nginx refuses to proxy. Nothing off-box can see it.
+      - "127.0.0.1:${API_LOOPBACK_PORT:-5080}:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --spider http://localhost:8080/health/live || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    networks: [internal]
+
+  web:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "${WEB_PORT:-8080}:8080"
+    networks: [internal]
+
+networks:
+  internal:
+
+volumes:
+  postgres-data:

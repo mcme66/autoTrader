@@ -1,0 +1,102 @@
+@import 'tailwindcss';
+
+/*
+ * Tailwind 4 keeps theme configuration in CSS. Colours are declared as OKLCH channel triplets
+ * so a single set of utility classes can serve both themes: the dark block below swaps the
+ * channel values and every `bg-surface`, `text-muted`, and friend follows automatically.
+ */
+@theme {
+  --color-canvas: oklch(98.4% 0.003 265);
+  --color-surface: oklch(100% 0 0);
+  --color-surface-muted: oklch(96.5% 0.004 265);
+  --color-border: oklch(91% 0.006 265);
+  --color-border-strong: oklch(85% 0.008 265);
+
+  --color-content: oklch(24% 0.02 265);
+  --color-content-muted: oklch(52% 0.017 265);
+  --color-content-subtle: oklch(64% 0.014 265);
+
+  --color-brand: oklch(55% 0.2 264);
+  --color-brand-hover: oklch(49% 0.2 264);
+  --color-brand-soft: oklch(95% 0.03 264);
+  --color-brand-content: oklch(100% 0 0);
+
+  /* Gains and losses are the two colours this product lives by. */
+  --color-gain: oklch(58% 0.15 152);
+  --color-gain-soft: oklch(95% 0.04 152);
+  --color-loss: oklch(58% 0.19 22);
+  --color-loss-soft: oklch(95% 0.04 22);
+  --color-warn: oklch(70% 0.15 75);
+  --color-warn-soft: oklch(96% 0.05 75);
+
+  --font-sans:
+    'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono:
+    ui-monospace, 'JetBrains Mono', 'Cascadia Mono', 'Consolas', monospace;
+
+  --radius-card: 0.75rem;
+}
+
+/*
+ * Class-based rather than media-based so the theme toggle can override the OS preference.
+ * `@custom-variant` teaches Tailwind to emit `dark:` utilities against this selector.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+.dark {
+  --color-canvas: oklch(17% 0.012 265);
+  --color-surface: oklch(21% 0.014 265);
+  --color-surface-muted: oklch(25% 0.015 265);
+  --color-border: oklch(30% 0.015 265);
+  --color-border-strong: oklch(38% 0.017 265);
+
+  --color-content: oklch(96% 0.005 265);
+  --color-content-muted: oklch(74% 0.014 265);
+  --color-content-subtle: oklch(60% 0.014 265);
+
+  --color-brand: oklch(66% 0.17 264);
+  --color-brand-hover: oklch(72% 0.17 264);
+  --color-brand-soft: oklch(30% 0.07 264);
+
+  --color-gain: oklch(72% 0.16 152);
+  --color-gain-soft: oklch(28% 0.06 152);
+  --color-loss: oklch(68% 0.18 22);
+  --color-loss-soft: oklch(28% 0.07 22);
+  --color-warn: oklch(78% 0.14 75);
+  --color-warn-soft: oklch(30% 0.06 75);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-canvas text-content font-sans antialiased;
+    margin: 0;
+  }
+
+  /* Tabular figures keep price columns from shifting as digits change. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    @apply outline-brand outline-2 outline-offset-2;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-strong) transparent;
+  }
+}

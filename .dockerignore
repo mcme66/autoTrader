@@ -1,0 +1,18 @@
+# The backend image builds from the repository root so it can copy backend/config alongside
+# the published output; everything the build does not need is excluded here.
+**/bin
+**/obj
+**/node_modules
+**/dist
+**/.vs
+**/.vscode
+**/.idea
+**/TestResults
+frontend
+MLPipeline_Jordan
+.git
+.github
+.env
+.env.*
+!.env.example
+*.md

@@ -1,0 +1,30 @@
+# PostgreSQL only. The API and the SPA run natively during development so that `dotnet watch`
+# and Vite's HMR both work; containerizing them would trade a fast edit-refresh loop for
+# nothing. `docker compose -f docker-compose.dev.yml up -d` is the whole local setup.
+name: finance-analysis-dev
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: fa-dev-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: finance
+      POSTGRES_PASSWORD: finance
+      POSTGRES_DB: finance_analysis
+    ports:
+      # 5433 on the host: a native PostgreSQL install commonly owns 5432, and having both
+      # respond on the same port is a debugging session nobody needs twice.
+      - "5433:5432"
+    volumes:
+      # postgres:18+ stores data in a major-version subdirectory and refuses to start if the
+      # volume is mounted at the old /var/lib/postgresql/data path.
+      - postgres-dev-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U finance -d finance_analysis"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres-dev-data:

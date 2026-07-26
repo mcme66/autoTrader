@@ -1,0 +1,7 @@
+# EF Core scaffolds these files. Holding generated output to the same analyzer and style
+# bar as hand-written code means every `dotnet ef migrations add` would break the build.
+[*.cs]
+generated_code = true
+dotnet_analyzer_diagnostic.severity = none
+dotnet_diagnostic.IDE0161.severity = none
+dotnet_diagnostic.IDE0055.severity = none
