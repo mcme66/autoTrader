@@ -165,6 +165,19 @@ try
     }
 
     await app.InitializeAsync();
+
+    if (args.Any(a => string.Equals(a, "--migrate", StringComparison.OrdinalIgnoreCase)))
+    {
+        Log.Information("Database migrations applied; exiting (--migrate).");
+        return;
+    }
+
+    if (args.Any(a => string.Equals(a, "--seed", StringComparison.OrdinalIgnoreCase)))
+    {
+        await DevelopmentSeeder.SeedAsync(app.Services);
+        return;
+    }
+
     await app.RunAsync();
 }
 catch (Exception ex) when (ex is not HostAbortedException)

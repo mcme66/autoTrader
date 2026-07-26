@@ -1,0 +1,20 @@
+{
+  "name": "finance-analysis",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Root tooling for local Finance Analysis Platform development",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "scripts": {
+    "setup": "node scripts/dev/setup.mjs",
+    "reset": "node scripts/dev/reset.mjs",
+    "seed": "node scripts/dev/seed.mjs",
+    "dev": "concurrently -k -n api,web -c cyan,magenta \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "dotnet watch run --project backend/src/FinanceAnalysis.Api/FinanceAnalysis.Api.csproj",
+    "dev:web": "npm run dev --prefix frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
