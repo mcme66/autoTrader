@@ -1,3 +1,6 @@
+# This Model will implement a series of processes, including algorithms, suggestions, and outputs.
+## The overall architecture will implement 3 main branches: direction, signal, confidence. 
+
 ## Overall pipeline:
 - Start
 - Load Configuration
@@ -37,4 +40,12 @@
 - Compute Volatility
 - Normalize Features
 - Prediction Matrix
+
+### Suggested Tables for Database:
+- ml_feature_sets
+- feature_set_id
+- model_id
+- feature_name
+- feature_version
+- created_at
 
