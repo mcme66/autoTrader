@@ -1,0 +1,24 @@
+This is a folder in which varying cleaning/wrangling features/functions will be kept
+Examples include:
+
+convert_dates()
+
+sort_rows()
+
+convert_numeric()
+
+remove_duplicates()
+
+handle_missing_values()
+
+example of a preprocessing function:
+def preprocess(df):
+
+    validate(df)
+
+    df = clean(df)
+
+    df = engineer_features(df)
+
+    return df
+

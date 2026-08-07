@@ -1,0 +1,31 @@
+examples of functions/features that may end up stored here:
+
+
+validate_columns(df)
+
+validate_dtypes(df)
+
+validate_missing_values(df)
+
+validate_duplicate_rows(df)
+
+validate_price_columns(df)
+
+validate_volume(df)
+
+validate_dates(df)
+
+each of these returns a boolean 'True' or raises a descriptive exemption
+
+
+some examples of engineered exemptions will include:
+
+class MissingColumnError(Exception):
+    pass
+
+class InvalidPriceError(Exception):
+    pass
+
+class DuplicateRowError(Exception):
+    pass
+
