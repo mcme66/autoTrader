@@ -22,3 +22,17 @@ def preprocess(df):
 
     return df
 
+
+This is the goal for the cleaning pipeline
+PostgreSQL
+    ↓
+ingest
+    ↓
+validate          ← DONE
+    ↓
+clean             ← NEXT
+    ↓
+feature engineering
+    ↓
+model
+
