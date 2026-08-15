@@ -93,3 +93,24 @@ def load_stock_data(
     raise ValueError(
         f"Unsupported source type: {source_type}"
     )
+    
+import os
+
+from dotenv import load_dotenv
+
+
+def get_database_url() -> str:
+    """
+    Retrieve the PostgreSQL connection URL from environment variables.
+    """
+
+    load_dotenv()
+
+    database_url = os.getenv("DATABASE_URL")
+
+    if not database_url:
+        raise ValueError(
+            "DATABASE_URL is not configured."
+        )
+
+    return database_url
